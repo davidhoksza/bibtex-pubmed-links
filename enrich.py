@@ -53,9 +53,12 @@ def enrich_bibtex_with_ids(bibtex_file, output_file):
         print(Fore.GREEN + Style.BRIGHT + f"Processing {title}")
         if title:
             pmids = search_article(title)
+            
             pmid = pmids[0] if len(pmids) > 0 else None
             if pmids:
                 print(Fore.GREEN + Style.BRIGHT + f"\t PubMed record found")
+                if len(pmids) > 0:
+                    print(Fore.CYAN + Style.BRIGHT + f"\t ... but more then one. Check the links for this record!")
                 article_xml = fetch_article_details(pmid)
                 doi, pmcid = extract_ids(article_xml)
                 # entry['note'] = f"DOI: {doi}, PMID: {', '.join(pmids)}"
