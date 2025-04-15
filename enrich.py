@@ -9,11 +9,10 @@ init(autoreset=True)
 
 def search_article(title):
     search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-    title_cleaned = re.sub("[{}*]", "", title)
-    print(title_cleaned)
+    title_cleaned = re.sub("[{}*]", "", title)    
     params = {
         'db': 'pubmed',
-        'term': f'"{title_cleaned}"',
+        'term': f'"{title_cleaned.replace(' ','+')}"[Title:~10]',
         'retmode': 'json'
     }
     response = requests.get(search_url, params=params)
@@ -57,14 +56,14 @@ def enrich_bibtex_with_ids(bibtex_file, output_file):
             pmid = pmids[0] if len(pmids) > 0 else None
             if pmids:
                 print(Fore.GREEN + Style.BRIGHT + f"\t PubMed record found")
-                if len(pmids) > 0:
+                if len(pmids) > 1:
                     print(Fore.CYAN + Style.BRIGHT + f"\t ... but more then one. Check the links for this record!")
                 article_xml = fetch_article_details(pmid)
                 doi, pmcid = extract_ids(article_xml)
                 # entry['note'] = f"DOI: {doi}, PMID: {', '.join(pmids)}"
-                template_pubmed = "[PubMed:\href{http://www.ncbi.nlm.nih.gov/pubmed/_ID_}{_ID_}]"
-                template_pubmed_central = "[PubMed Central:\href{http://www.ncbi.nlm.nih.gov/pmc/articles/_ID_}{_ID_}]"
-                template_doi = "[doi:\href{http://dx.doi.org/_ID_}{_ID_}]"
+                template_pubmed = "[PubMed:\\href{http://www.ncbi.nlm.nih.gov/pubmed/_ID_}{_ID_}]"
+                template_pubmed_central = "[PubMed Central:\\href{http://www.ncbi.nlm.nih.gov/pmc/articles/_ID_}{_ID_}]"
+                template_doi = "[doi:\\href{http://dx.doi.org/_ID_}{_ID_}]"
 
                 note = ""
                 if pmid:

@@ -9,7 +9,7 @@ The output should look similar to [this](data/NAR_urls_in_reference_list_for_LaT
 Usage:
 
 ```
-python extend.py data/main.bib output.bib
+python enrich.py data/main.bib output.bib
 ```
 
 ## Possible issues
